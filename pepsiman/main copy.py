@@ -18,7 +18,7 @@ def image_f_matrix_generator(folder_name):
     path_list = path_generator(folder_name)
     for path in path_list:
         original_matrix = (cv2.imread(path, 0))
-        flatten_matrix = original_matrix.flatten()
+        flatten_matrix = np.transpose(np.array([original_matrix.flatten()]))
         matrix_list.append(flatten_matrix)
     return matrix_list
 
@@ -32,22 +32,31 @@ def average_flatten_generator(matrix_list):
     return sum_matrix
 
 
-def transposed_training_matrix_generator(flat_matrix_list, average_matrix):
-    flat_difference_list = []
-    # print(flat_difference_list.shape)
-    n = len(flat_matrix_list)
-    for i in range(0, n):
-        added_matrix = np.subtract(flat_matrix_list[i], average_matrix)
-        flat_difference_list.append(added_matrix)
-    return (np.array(flat_difference_list)).astype(np.float16)
+def training_matrix_generator(flat_matrix_list, average_matrix):
+    difference_matrix = np.subtract(
+        flat_matrix_list[0], average_matrix).astype(np.float16)
+    # print(difference_matrix.shape)
+    # print(average_matrix.shape)
+    difference_matrix_t = np.transpose(difference_matrix)
+    # print(difference_matrix_t.shape)
+
+    flat_difference_matrix = (
+        np.matmul(difference_matrix, difference_matrix_t))
+    print(flat_difference_matrix)
+    # n = len(flat_matrix_list)
+    # for i in range(1, n):
+    #     difference_matrix = np.subtract(flat_matrix_list[i], average_matrix)
+    #     difference_matrix_t = np.transpose(difference_matrix)
+    #     added_matrix = np.matmul(difference_matrix, difference_matrix_t)
+    #     flat_difference_matrix = np.add(added_matrix, flat_difference_matrix)
+    # flat_difference_matrix = (1/n) * flat_difference_matrix
+    # return flat_difference_matrix
 
 
 flat_matrix_list = image_f_matrix_generator(
     "/media/fatih/Mass Storage/Tugas-Tugas Kuliah/Algeom/Tubes 2/Algeo02-13521060/pepsiman/test_image")
 average_matrix = average_flatten_generator(flat_matrix_list)
-transposed_training_matrix = transposed_training_matrix_generator(
+covariant = training_matrix_generator(
     flat_matrix_list, average_matrix)
-training_matrix = np.transpose(transposed_training_matrix)
-covariant = np.matmul(training_matrix, transposed_training_matrix)
 
 # np.savetxt("matrix.txt", covariant, fmt='%.6g')

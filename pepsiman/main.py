@@ -39,7 +39,7 @@ def transposed_training_matrix_generator(flat_matrix_list, average_matrix):
     for i in range(0, n):
         added_matrix = np.subtract(flat_matrix_list[i], average_matrix)
         flat_difference_list.append(added_matrix)
-    return (np.array(flat_difference_list)).astype(np.float16)
+    return (np.array(flat_difference_list))
 
 
 flat_matrix_list = image_f_matrix_generator(
@@ -48,6 +48,6 @@ average_matrix = average_flatten_generator(flat_matrix_list)
 transposed_training_matrix = transposed_training_matrix_generator(
     flat_matrix_list, average_matrix)
 training_matrix = np.transpose(transposed_training_matrix)
-covariant = np.matmul(training_matrix, transposed_training_matrix)
+covariant = np.matmul(transposed_training_matrix, training_matrix)
 
-# np.savetxt("matrix.txt", covariant, fmt='%.6g')
+np.savetxt("matrix.txt", covariant, fmt='%.9g')

@@ -42,12 +42,33 @@ def transposed_training_matrix_generator(flat_matrix_list, average_matrix):
     return (np.array(flat_difference_list))
 
 
+def eigen_generator(covariant_acc, training_matrix):
+    eigenval_list, eigenvec_acc_list = np.linalg.eig(covariant_acc)
+    eigenvec_list = np.array([]).reshape(65536, 0)
+    for eigenvec_acc in eigenvec_acc_list:
+        new_eigenvec = (np.matmul(
+            training_matrix, (np.array(eigenvec_acc)[np.newaxis].T)))
+        new_eigenvec = new_eigenvec / np.sqrt((new_eigenvec**2).sum())
+        eigenvec_list = np.append(eigenvec_list, new_eigenvec, axis=1)
+    return eigenval_list, eigenvec_list
+
+
+def y_generator(covariant_acc, training_matrix):
+    eigenval_list, eigenvec_matrix = eigen_generator(
+        covariant_acc, training_matrix)
+    eigenvec_matrix_t = eigenvec_matrix.T
+    return np.matmul(eigenvec_matrix_t, training_matrix)
+
+
 flat_matrix_list = image_f_matrix_generator(
     "/media/fatih/Mass Storage/Tugas-Tugas Kuliah/Algeom/Tubes 2/Algeo02-13521060/pepsiman/test_image")
 average_matrix = average_flatten_generator(flat_matrix_list)
 transposed_training_matrix = transposed_training_matrix_generator(
     flat_matrix_list, average_matrix)
 training_matrix = np.transpose(transposed_training_matrix)
-covariant = np.matmul(transposed_training_matrix, training_matrix)
+covariant_acc = np.matmul(transposed_training_matrix, training_matrix)
 
-np.savetxt("matrix.txt", covariant, fmt='%.9g')
+y = y_generator(covariant_acc, training_matrix)
+
+
+np.savetxt("matrix.txt", y, fmt='%.18e')

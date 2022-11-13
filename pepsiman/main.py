@@ -10,6 +10,7 @@ def path_generator(folder_name):
         for file in files:
             if file.endswith('.jpg'):
                 path_list.append(root + "/" + file)
+    print(path_list)
     return path_list
 
 
@@ -68,22 +69,39 @@ def y_generator(covariant_acc, training_matrix):
     return np.matmul(eigenvec_matrix_t, training_matrix)
 
 
-def distance_of_target(average_matrix, eigenvec_matrix):
-    original_target_matrix = (cv2.imread("target.jpg", 0))
+def omega_of_target(filename, average_matrix, eigenvec_matrix):
+    original_target_matrix = (cv2.imread(f"{filename}.jpg", 0))
     flatten_target = np.array(original_target_matrix.flatten())[np.newaxis].T
-    distance = np.matmul(eigenvec_matrix.T, np.subtract(
+    omega = np.matmul(eigenvec_matrix.T, np.subtract(
         flatten_target, average_matrix))
-    return distance
+    return omega
+
+
+def smallest_distance(average_matrix, eigenvec_matrix, y):
+    omega_in_array = omega_of_target("70",
+                                     average_matrix, eigenvec_matrix).flatten()
+    print(omega_in_array)
+    min_column_r = y[:, 0]
+    min_dist = np.linalg.norm(omega_in_array - min_column_r)
+    min_column = 0
+    n = len(y[0])
+    for i in range(1, n):
+        observed_column = y[:, i]
+        dist = np.linalg.norm(omega_in_array - observed_column)
+        # if (i == 15):
+        #     print()
+        if dist < min_dist:
+            min_dist = dist
+            min_column = i
+            min_column_r = observed_column
+    print(min_dist)
+    print(min_column_r)
+    return min_column
 
 
 flat_matrix_list = image_f_matrix_generator(
     "/media/fatih/Mass Storage/Tugas-Tugas Kuliah/Algeom/Tubes 2/Algeo02-13521060/pepsiman/test_image")
-# print(flat_matrix_list)
-# print("\n")
-# print(flat_matrix_list[0])
-# print(flat_matrix_list[0].shape)
 average_matrix = average_flatten_generator(flat_matrix_list)
-print(average_matrix)
 
 training_matrix = training_matrix_generator(
     flat_matrix_list, average_matrix)
@@ -91,9 +109,11 @@ training_matrix_t = np.transpose(training_matrix)
 covariant_acc = np.matmul(training_matrix_t, training_matrix)
 ev, e = eigen_generator(covariant_acc, training_matrix)
 
-distance = distance_of_target(average_matrix, e)
-print(distance)
-# y = y_generator(covariant_acc, training_matrix)
+omega = omega_of_target("70", average_matrix, e)
+
+y = y_generator(covariant_acc, training_matrix)
+i_of_bestface = smallest_distance(average_matrix, e, y)
+print(i_of_bestface)
 
 
 # np.savetxt("matrix.txt", y, fmt='%.18e')

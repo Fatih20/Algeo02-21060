@@ -68,6 +68,14 @@ def y_generator(covariant_acc, training_matrix):
     return np.matmul(eigenvec_matrix_t, training_matrix)
 
 
+def distance_of_target(average_matrix, eigenvec_matrix):
+    original_target_matrix = (cv2.imread("target.jpg", 0))
+    flatten_target = np.array(original_target_matrix.flatten())[np.newaxis].T
+    distance = np.matmul(eigenvec_matrix.T, np.subtract(
+        flatten_target, average_matrix))
+    return distance
+
+
 flat_matrix_list = image_f_matrix_generator(
     "/media/fatih/Mass Storage/Tugas-Tugas Kuliah/Algeom/Tubes 2/Algeo02-13521060/pepsiman/test_image")
 # print(flat_matrix_list)
@@ -81,8 +89,11 @@ training_matrix = training_matrix_generator(
     flat_matrix_list, average_matrix)
 training_matrix_t = np.transpose(training_matrix)
 covariant_acc = np.matmul(training_matrix_t, training_matrix)
+ev, e = eigen_generator(covariant_acc, training_matrix)
 
-y = y_generator(covariant_acc, training_matrix)
+distance = distance_of_target(average_matrix, e)
+print(distance)
+# y = y_generator(covariant_acc, training_matrix)
 
 
-np.savetxt("matrix.txt", y, fmt='%.18e')
+# np.savetxt("matrix.txt", y, fmt='%.18e')

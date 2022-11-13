@@ -5,12 +5,15 @@ import os
 
 
 def path_generator(folder_name):
+    name_list = []
     path_list = []
     for root, dirs, files in os.walk(folder_name):
         for file in files:
             if file.endswith('.jpg'):
-                path_list.append(root + "/" + file)
-    print(path_list)
+                name_list.append(int(file[:len(file)-4]))
+        name_list.sort()
+        for name in name_list:
+            path_list.append(f"{root}/{name}.jpg")
     return path_list
 
 
@@ -77,10 +80,9 @@ def omega_of_target(filename, average_matrix, eigenvec_matrix):
     return omega
 
 
-def smallest_distance(average_matrix, eigenvec_matrix, y):
+def bestface(average_matrix, eigenvec_matrix, y, path_list):
     omega_in_array = omega_of_target("70",
                                      average_matrix, eigenvec_matrix).flatten()
-    print(omega_in_array)
     min_column_r = y[:, 0]
     min_dist = np.linalg.norm(omega_in_array - min_column_r)
     min_column = 0
@@ -88,19 +90,18 @@ def smallest_distance(average_matrix, eigenvec_matrix, y):
     for i in range(1, n):
         observed_column = y[:, i]
         dist = np.linalg.norm(omega_in_array - observed_column)
-        # if (i == 15):
-        #     print()
         if dist < min_dist:
             min_dist = dist
             min_column = i
             min_column_r = observed_column
-    print(min_dist)
-    print(min_column_r)
-    return min_column
+    return path_list[min_column]
 
 
+path_list = path_generator(
+    "/media/fatih/Mass Storage/Tugas-Tugas Kuliah/Algeom/Tubes 2/Algeo02-13521060/pepsiman/test_image")
 flat_matrix_list = image_f_matrix_generator(
     "/media/fatih/Mass Storage/Tugas-Tugas Kuliah/Algeom/Tubes 2/Algeo02-13521060/pepsiman/test_image")
+
 average_matrix = average_flatten_generator(flat_matrix_list)
 
 training_matrix = training_matrix_generator(
@@ -112,8 +113,7 @@ ev, e = eigen_generator(covariant_acc, training_matrix)
 omega = omega_of_target("70", average_matrix, e)
 
 y = y_generator(covariant_acc, training_matrix)
-i_of_bestface = smallest_distance(average_matrix, e, y)
-print(i_of_bestface)
-
+file_of_bestface = bestface(average_matrix, e, y, path_list)
+print(file_of_bestface)
 
 # np.savetxt("matrix.txt", y, fmt='%.18e')

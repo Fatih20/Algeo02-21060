@@ -42,7 +42,7 @@ class mainLayout(Widget):
 
 class mainApp(App):
     def build(self):
-        Window.clearcolor = (209/255.0, 1, 130/255.0, 1)
+        #Window.clearcolor = (209/255.0, 1, 130/255.0, 1)
         return mainLayout()
 
 if __name__ == '__main__':

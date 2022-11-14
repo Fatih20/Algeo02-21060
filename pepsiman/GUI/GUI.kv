@@ -38,6 +38,11 @@
             
 <mainLayout>
     id: widget
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Images/bg.jfif'
 
     TextInput:
         id: folderName

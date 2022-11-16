@@ -50,6 +50,7 @@ class mainLayout(Widget):
 
             testedImage = self.ids.testImage.source
             sampleFolder = self.ids.folderName.text
+            path_list = path_generator(sampleFolder)
             flat_matrix_list = image_f_matrix_generator(sampleFolder)
             average_matrix = average_flatten_generator(flat_matrix_list)
             training_matrix = training_matrix_generator(

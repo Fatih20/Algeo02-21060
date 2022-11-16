@@ -73,7 +73,7 @@ def y_generator(covariant_acc, training_matrix):
 
 
 def omega_of_target(filename, average_matrix, eigenvec_matrix):
-    original_target_matrix = (cv2.imread(f"{filename}.jpg", 0))
+    original_target_matrix = (cv2.imread(f"{filename}", 0))
     flatten_target = np.array(original_target_matrix.flatten())[np.newaxis].T
     omega = np.matmul(eigenvec_matrix.T, np.subtract(
         flatten_target, average_matrix))

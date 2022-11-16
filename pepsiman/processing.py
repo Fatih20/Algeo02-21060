@@ -1,7 +1,11 @@
 import cv2
 import numpy as np
 import os
+import eigen_function as eigfunc
 # import matplotlib.pyplot as pyplot
+
+
+USE_NP_LINALG_EIG = False
 
 
 def path_generator(folder_name):
@@ -53,7 +57,11 @@ def training_matrix_generator(flat_matrix_list, average_matrix):
 
 
 def eigen_generator(covariant_acc, training_matrix):
-    eigenval_list, eigenvec_acc_list = np.linalg.eig(covariant_acc)
+    if (USE_NP_LINALG_EIG is True):
+        eigenval_list, eigenvec_acc_list = np.linalg.eig(covariant_acc)
+    else:
+        eigenval_list, eigenvec_acc_list = eigfunc.QR_eig(covariant_acc)
+
     eigenvec_list = np.array([]).reshape(65536, 0)
     for eigenvec_acc in eigenvec_acc_list:
         new_eigenvec = (np.matmul(

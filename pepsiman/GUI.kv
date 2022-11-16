@@ -1,0 +1,219 @@
+<RoundedInputLabel1@Label>
+    color: (1, 1, 1, 1)
+    outline_color: (0, 1, 0, 1)
+    outline_width: 1
+
+    size_hint: (None, None)
+    height: 80
+    width: 500
+    pos_hint: {"x": 0}
+
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba: (104/255.0, 183/255.0, 35/255.0, 1)
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [58]
+
+<RoundedInputLabel2@Label>
+    color: (1, 1, 1, 1)
+    outline_color: (0, 1, 0, 1)
+    outline_width: 1
+
+    size_hint: (None, None)
+    height: 80
+    width: 500
+    pos_hint: {"x": 0.01, "y": 0.01}
+
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba: (104/255.0, 183/255.0, 35/255.0, 1)
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [58, 58, 0, 0]
+            
+<mainLayout>
+    id: widget
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Images/bg.jfif'
+
+    TextInput:
+        id: folderName
+        size_hint: (None, None)
+        width: 0
+        height: 0
+        text: ''
+
+    GridLayout:
+        cols: 1
+        size: root.width, root.height
+
+        # Title
+        Label:
+            text: "PEPSIMAN FACE RECOGNITION APP"
+            font_size: 36
+            bold: True
+            italic: True
+
+            color: (209/255.0, 1, 130/255.0, 1)
+            outline_color: (0,1,0,1)
+            outline_width: 1
+
+            size_hint: (None, None)
+            height: 78
+            width: 1536
+
+            background_color: (104/255.0, 183/255.0, 35/255.0, 1)
+            canvas.before:
+                Color:
+                    rgba: self.background_color
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [0, 0, 58, 58]
+
+        Label: 
+            text: ""
+            size_hint: (None, None)
+            height: 10
+
+        GridLayout:
+            cols: 3
+
+            BoxLayout:
+                orientation: "vertical"
+                padding: 10
+                spacing: 10
+                background_color: (1, 1, 1, 1)
+
+                RoundedInputLabel1:
+                    text: "Input your training image folder: "
+                    font_size: 24
+                    bold: True
+                
+                FileChooserIconView:
+                    id: filechoosen1
+                    dirselect: True
+                    # Untuk tes biar cepat:
+                    #rootpath: "..\pepsiman"
+                    on_selection: widget.saveFolder(filechoosen1.selection)
+
+                    color: (0, 0, 0, 1)
+
+                    canvas.before:
+                        Color:
+                            rgba: (0, 0, 0, 1)
+                        RoundedRectangle:
+                            pos: (15, 0)
+                            size: (475, 239)
+                            radius: [10]
+
+                RoundedInputLabel1:
+                    text: "Input your test image: "
+                    font_size: 24
+                    bold: True
+
+                FileChooserIconView:
+                    id: filechoosen2
+                    # Untuk tes biar cepat:
+                    # rootpath: "test_image"
+                    on_selection: widget.showTestImage(filechoosen2.selection)
+
+                    color: (0, 0, 0, 1)
+
+                    canvas.before:
+                        Color:
+                            rgba: (0, 0, 0, 1)
+                        RoundedRectangle:
+                            pos: (15, 0)
+                            size: (475, 239)
+                            radius: [10]
+                
+                Button:
+                    text: "Process"
+                    font_size: 20
+                    bold: True
+
+                    size_hint: (None, None)
+                    height: 30
+                    width: 100
+                    pos_hint: {"x": 0.35, "top": 1}
+
+                    background_color: (104/255.0, 183/255.0, 35/255.0, 1)
+                    background_normal: ""
+                    canvas.before:
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
+                    on_release: root.startProcessing()
+
+                Label:
+                    text: ''
+                    size_hint: (None, None)
+                    height: 5
+
+            GridLayout:
+                cols: 1
+
+                Label:
+                    text: ''
+                    size_hint: (0.05, 0.0075)
+
+                RoundedInputLabel2:
+                    text: "Your test image: "
+                    font_size: 24
+                    bold: True
+                
+                Image:
+                    id: testImage
+                    source: "Images/LoadingIcon.png"
+                    allow_scretch: True
+                    keep_ratio: True
+            
+            GridLayout:
+                cols: 1
+
+                Label:
+                    text: ''
+                    size_hint: (0.05, 0.0075)
+
+                RoundedInputLabel2:
+                    text: "The test image is closest to: "
+                    font_size: 24
+                    bold: True
+
+                Image:
+                    id: resultImage
+                    source: "Images/LoadingIcon.png"
+                    allow_scretch: True
+                    keep_ratio: True
+                
+                GridLayout:
+                    cols: 2
+                    size_hint: (1, 0.085)
+                    height: 20
+
+                    Label:
+                        text: "Examination Time:"
+                        color: (0, 0, 0, 1)
+                        bold: True
+                        size_hint: {0.8, 1}
+
+                        halign: "right"
+                        pos_hint: {"x": 2, "y": 0.2}
+
+                    Label: 
+                        id: processingTime
+                        text: "0.0"
+                        color: (0, 0, 0, 1)
+
+                        halign: "left"
+                        pos_hint: {"x": 4, "y": 0.5}

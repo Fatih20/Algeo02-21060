@@ -58,9 +58,9 @@ class mainLayout(Widget):
             training_matrix_t = np.transpose(training_matrix)
             covariant_acc = np.matmul(training_matrix_t, training_matrix)
             ev, e = eigen_generator(covariant_acc, training_matrix)
-            omega = omega_of_target(testedImage, average_matrix, e)
             y = y_generator(covariant_acc, training_matrix)
-            file_of_bestface = bestface(average_matrix, e, y, path_list)
+            file_of_bestface = bestface(
+                average_matrix, e, y, path_list, testedImage)
             self.ids.resultImage.source = file_of_bestface
 
             Clock.unschedule(self.stop_time)

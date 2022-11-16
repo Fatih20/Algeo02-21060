@@ -80,8 +80,8 @@ def omega_of_target(filename, average_matrix, eigenvec_matrix):
     return omega
 
 
-def bestface(average_matrix, eigenvec_matrix, y, path_list):
-    omega_in_array = omega_of_target("70",
+def bestface(average_matrix, eigenvec_matrix, y, path_list, testedImage):
+    omega_in_array = omega_of_target(testedImage,
                                      average_matrix, eigenvec_matrix).flatten()
     min_column_r = y[:, 0]
     min_dist = np.linalg.norm(omega_in_array - min_column_r)

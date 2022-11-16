@@ -101,6 +101,8 @@
                 FileChooserIconView:
                     id: filechoosen1
                     dirselect: True
+                    # Untuk tes biar cepat:
+                    #rootpath: "..\pepsiman"
                     on_selection: widget.saveFolder(filechoosen1.selection)
 
                     color: (0, 0, 0, 1)
@@ -120,6 +122,8 @@
 
                 FileChooserIconView:
                     id: filechoosen2
+                    # Untuk tes biar cepat:
+                    # rootpath: "test_image"
                     on_selection: widget.showTestImage(filechoosen2.selection)
 
                     color: (0, 0, 0, 1)

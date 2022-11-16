@@ -37,7 +37,6 @@ class mainLayout(Widget):
 
     def update_time(self, *args):
         self.ids.processingTime.text = f"{float(self.ids.processingTime.text) + 0.01: .2f}"
-        print("a")
 
     def stop_time(self):
         self.ids.processingTime.text = self.ids.processingTime.text

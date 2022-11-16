@@ -1,11 +1,14 @@
-from kivy.app import App 
+from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.clock import Clock
 
+from processing import *
+
 Builder.load_file("GUI.kv")
+
 
 class mainLayout(Widget):
     # Show test image
@@ -34,16 +37,31 @@ class mainLayout(Widget):
 
     def update_time(self, *args):
         self.ids.processingTime.text = f"{float(self.ids.processingTime.text) + 0.01: .2f}"
-        
+
     # Start Processing
     def startProcessing(self):
+        testedImage = self.ids.testImage.source
+        sampleFolder = self.ids.folderName.text
+        flat_matrix_list = image_f_matrix_generator(sampleFolder)
+        average_matrix = average_flatten_generator(flat_matrix_list)
+        training_matrix = training_matrix_generator(
+            flat_matrix_list, average_matrix)
+        training_matrix_t = np.transpose(training_matrix)
+        covariant_acc = np.matmul(training_matrix_t, training_matrix)
+        ev, e = eigen_generator(covariant_acc, training_matrix)
+        omega = omega_of_target(testedImage, average_matrix, e)
+        y = y_generator(covariant_acc, training_matrix)
+        file_of_bestface = bestface(average_matrix, e, y, path_list)
+        self.ids.resultImage.source = file_of_bestface
         self.startStopwatch()
         pass
+
 
 class mainApp(App):
     def build(self):
         #Window.clearcolor = (209/255.0, 1, 130/255.0, 1)
         return mainLayout()
+
 
 if __name__ == '__main__':
     mainApp().run()

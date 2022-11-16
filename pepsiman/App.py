@@ -37,24 +37,32 @@ class mainLayout(Widget):
 
     def update_time(self, *args):
         self.ids.processingTime.text = f"{float(self.ids.processingTime.text) + 0.01: .2f}"
+        print("a")
+
+    def stop_time(self):
+        self.ids.processingTime.text = self.ids.processingTime.text
 
     # Start Processing
     def startProcessing(self):
-        testedImage = self.ids.testImage.source
-        sampleFolder = self.ids.folderName.text
-        flat_matrix_list = image_f_matrix_generator(sampleFolder)
-        average_matrix = average_flatten_generator(flat_matrix_list)
-        training_matrix = training_matrix_generator(
-            flat_matrix_list, average_matrix)
-        training_matrix_t = np.transpose(training_matrix)
-        covariant_acc = np.matmul(training_matrix_t, training_matrix)
-        ev, e = eigen_generator(covariant_acc, training_matrix)
-        omega = omega_of_target(testedImage, average_matrix, e)
-        y = y_generator(covariant_acc, training_matrix)
-        file_of_bestface = bestface(average_matrix, e, y, path_list)
-        self.ids.resultImage.source = file_of_bestface
-        self.startStopwatch()
-        pass
+        if (self.ids.testImage.source != "Images/LoadingIcon.png" and self.ids.folderName.text != ""):
+            self.ids.processingTime.text = "0.00"
+            self.startStopwatch()
+
+            testedImage = self.ids.testImage.source
+            sampleFolder = self.ids.folderName.text
+            flat_matrix_list = image_f_matrix_generator(sampleFolder)
+            average_matrix = average_flatten_generator(flat_matrix_list)
+            training_matrix = training_matrix_generator(
+                flat_matrix_list, average_matrix)
+            training_matrix_t = np.transpose(training_matrix)
+            covariant_acc = np.matmul(training_matrix_t, training_matrix)
+            ev, e = eigen_generator(covariant_acc, training_matrix)
+            omega = omega_of_target(testedImage, average_matrix, e)
+            y = y_generator(covariant_acc, training_matrix)
+            file_of_bestface = bestface(average_matrix, e, y, path_list)
+            self.ids.resultImage.source = file_of_bestface
+
+            Clock.unschedule(self.stop_time)
 
 
 class mainApp(App):

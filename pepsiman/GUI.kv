@@ -101,7 +101,6 @@
                 FileChooserIconView:
                     id: filechoosen1
                     dirselect: True
-                    rootpath: "..\GUI"
                     on_selection: widget.saveFolder(filechoosen1.selection)
 
                     color: (0, 0, 0, 1)
@@ -121,7 +120,6 @@
 
                 FileChooserIconView:
                     id: filechoosen2
-                    rootpath: "Images"
                     on_selection: widget.showTestImage(filechoosen2.selection)
 
                     color: (0, 0, 0, 1)
@@ -172,7 +170,7 @@
                 
                 Image:
                     id: testImage
-                    source: "Images/backgroundcolor.png"
+                    source: "Images/LoadingIcon.png"
                     allow_scretch: True
                     keep_ratio: True
             
@@ -190,7 +188,7 @@
 
                 Image:
                     id: resultImage
-                    source: "Images/backgroundcolor.png"
+                    source: "Images/LoadingIcon.png"
                     allow_scretch: True
                     keep_ratio: True
                 

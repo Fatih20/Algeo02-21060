@@ -97,23 +97,23 @@ def bestface(average_matrix, eigenvec_matrix, y, path_list):
     return path_list[min_column]
 
 
-path_list = path_generator(
-    "/media/fatih/Mass Storage/Tugas-Tugas Kuliah/Algeom/Tubes 2/Algeo02-13521060/pepsiman/test_image")
-flat_matrix_list = image_f_matrix_generator(
-    "/media/fatih/Mass Storage/Tugas-Tugas Kuliah/Algeom/Tubes 2/Algeo02-13521060/pepsiman/test_image")
+# path_list = path_generator(
+#     "/media/fatih/Mass Storage/Tugas-Tugas Kuliah/Algeom/Tubes 2/Algeo02-13521060/pepsiman/test_image")
+# flat_matrix_list = image_f_matrix_generator(
+#     "/media/fatih/Mass Storage/Tugas-Tugas Kuliah/Algeom/Tubes 2/Algeo02-13521060/pepsiman/test_image")
 
-average_matrix = average_flatten_generator(flat_matrix_list)
+# average_matrix = average_flatten_generator(flat_matrix_list)
 
-training_matrix = training_matrix_generator(
-    flat_matrix_list, average_matrix)
-training_matrix_t = np.transpose(training_matrix)
-covariant_acc = np.matmul(training_matrix_t, training_matrix)
-ev, e = eigen_generator(covariant_acc, training_matrix)
+# training_matrix = training_matrix_generator(
+#     flat_matrix_list, average_matrix)
+# training_matrix_t = np.transpose(training_matrix)
+# covariant_acc = np.matmul(training_matrix_t, training_matrix)
+# ev, e = eigen_generator(covariant_acc, training_matrix)
 
-omega = omega_of_target("70", average_matrix, e)
+# omega = omega_of_target("70", average_matrix, e)
 
-y = y_generator(covariant_acc, training_matrix)
-file_of_bestface = bestface(average_matrix, e, y, path_list)
-print(file_of_bestface)
+# y = y_generator(covariant_acc, training_matrix)
+# file_of_bestface = bestface(average_matrix, e, y, path_list)
+# print(file_of_bestface)
 
 # np.savetxt("matrix.txt", y, fmt='%.18e')

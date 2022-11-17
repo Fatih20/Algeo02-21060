@@ -6,11 +6,14 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 
 from processing import *
+import time
 
 Builder.load_file("GUI.kv")
 
 
 class mainLayout(Widget):
+    matrixEigen = [[]]
+
     # Show test image
     def showTestImage(self, pathname):
         try:
@@ -32,21 +35,60 @@ class mainLayout(Widget):
         except:
             pass
 
-    def startStopwatch(self):
-        Clock.schedule_interval(self.update_time, 0.01)
+    def getCurrentTime(self):
+        time_tuple = time.localtime()
+        time_string = time.strftime("%m/%d/%Y %H%M%S", time_tuple)
 
-    def update_time(self, *args):
-        self.ids.processingTime.text = f"{float(self.ids.processingTime.text) + 0.01: .2f}"
+        jam = int(time_string[11:13])
+        menit = int(time_string[13:15])
+        detik = int(time_string[15:17])
+        return [jam, menit, detik]
+    
+    def subtractAndShowTime(self, jam2, jam1, menit2, menit1, detik2, detik1):
+        to_show = (jam2 - jam1)*3600 + (menit2-menit1)*60 + (detik2-detik1)
+        self.ids.processingTime.text = f"{to_show} secs"
 
-    def stop_time(self):
-        self.ids.processingTime.text = self.ids.processingTime.text
 
-    # Start Processing
-    def startProcessing(self):
-        if (self.ids.testImage.source != "Images/LoadingIcon.png" and self.ids.folderName.text != ""):
-            self.ids.processingTime.text = "0.00"
-            self.startStopwatch()
+    # Process Folder
+    def processTrainingSet(self):
+        if (self.ids.folderName.text != ""):
+            jam1 = jam2 = menit1 = menit2 = detik1 = detik2 = 0
 
+            timeArr = self.getCurrentTime()
+            jam1 = timeArr[0]
+            menit1 = timeArr[1]
+            detik1 = timeArr[2]
+
+            #--------
+            # Algoritma buat proses traing set disini
+            # cara simpen ke matrix:
+            # self.matrixEigen = blabla
+            #--------
+
+            timeArr = self.getCurrentTime()
+            jam2 = timeArr[0]
+            menit2 = timeArr[1]
+            detik2 = timeArr[2]
+
+            self.subtractAndShowTime(jam2, jam1, menit2, menit1, detik2, detik1)
+
+    # Search for best image
+    def searchBestImage(self):
+        if (self.ids.testImage.source != "Images/LoadingIcon.png"):
+            # Clock.schedule_interval(self.showLoading(), 0)
+            jam1 = jam2 = menit1 = menit2 = detik1 = detik2 = 0
+
+            timeArr = self.getCurrentTime()
+            jam1 = timeArr[0]
+            menit1 = timeArr[1]
+            detik1 = timeArr[2]
+
+            #time.sleep(3)
+            #--------
+            # Algoritma buat cari best_face disini
+            #--------
+
+            # Raw code untuk processing
             testedImage = self.ids.testImage.source
             sampleFolder = self.ids.folderName.text
             path_list = path_generator(sampleFolder)
@@ -62,8 +104,12 @@ class mainLayout(Widget):
                 average_matrix, e, y, path_list, testedImage)
             self.ids.resultImage.source = file_of_bestface
 
-            Clock.unschedule(self.stop_time)
+            timeArr = self.getCurrentTime()
+            jam2 = timeArr[0]
+            menit2 = timeArr[1]
+            detik2 = timeArr[2]
 
+            self.subtractAndShowTime(jam2, jam1, menit2, menit1, detik2, detik1)
 
 class mainApp(App):
     def build(self):

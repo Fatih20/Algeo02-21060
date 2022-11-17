@@ -112,7 +112,7 @@
                             rgba: (0, 0, 0, 1)
                         RoundedRectangle:
                             pos: (15, 0)
-                            size: (475, 239)
+                            size: (475, 251)
                             radius: [10]
 
                 RoundedInputLabel1:
@@ -123,7 +123,7 @@
                 FileChooserIconView:
                     id: filechoosen2
                     # Untuk tes biar cepat:
-                    # rootpath: "test_image"
+                    #srootpath: "test_image"
                     on_selection: widget.showTestImage(filechoosen2.selection)
 
                     color: (0, 0, 0, 1)
@@ -133,27 +133,52 @@
                             rgba: (0, 0, 0, 1)
                         RoundedRectangle:
                             pos: (15, 0)
-                            size: (475, 239)
+                            size: (475, 251)
                             radius: [10]
                 
-                Button:
-                    text: "Process"
-                    font_size: 20
-                    bold: True
-
+                GridLayout:
+                    cols: 2
+                    height: 15
                     size_hint: (None, None)
-                    height: 30
-                    width: 100
-                    pos_hint: {"x": 0.35, "top": 1}
+                    pos_hint: {"x": 0.082}
 
-                    background_color: (104/255.0, 183/255.0, 35/255.0, 1)
-                    background_normal: ""
-                    canvas.before:
-                        Rectangle:
-                            size: self.size
-                            pos: self.pos
+                    Button:
+                        text: "Process Set"
+                        font_size: 20
+                        bold: True
 
-                    on_release: root.startProcessing()
+                        size_hint: (None, None)
+                        height: 30
+                        width: 200
+                        pos: (0, 0)
+
+                        background_color: (104/255.0, 183/255.0, 35/255.0, 1)
+                        background_normal: ""
+                        canvas.before:
+                            Rectangle:
+                                size: self.size
+                                pos: self.pos
+
+                        on_release: root.processTrainingSet()
+
+                    Button:
+                        text: "Process Image"
+                        font_size: 20
+                        bold: True
+
+                        size_hint: (None, None)
+                        height: 30
+                        width: 200
+                        pos: (200, 100)
+
+                        background_color: (104/255.0, 183/255.0, 35/255.0, 1)
+                        background_normal: ""
+                        # canvas.before:
+                        #     Rectangle:
+                        #         size: self.size
+                        #         pos: self.pos
+
+                        on_release: root.searchBestImage()
 
                 Label:
                     text: ''
@@ -177,6 +202,18 @@
                     source: "Images/LoadingIcon.png"
                     allow_scretch: True
                     keep_ratio: True
+
+                Label:
+                    text: "Please wait some time after you press the processing button..."
+                    color: (0, 0, 0, 1)
+                    bold: True
+
+                    cols: 2
+                    size_hint: (1, 0.085)
+                    height: 20
+
+                    halign: "right"
+                    pos_hint: {"x": 2, "y": 0.2}
             
             GridLayout:
                 cols: 1
@@ -202,7 +239,7 @@
                     height: 20
 
                     Label:
-                        text: "Examination Time:"
+                        text: "                                                        Examination Time:"
                         color: (0, 0, 0, 1)
                         bold: True
                         size_hint: {0.8, 1}
@@ -212,7 +249,7 @@
 
                     Label: 
                         id: processingTime
-                        text: "0.0"
+                        text: "0 secs"
                         color: (0, 0, 0, 1)
 
                         halign: "left"

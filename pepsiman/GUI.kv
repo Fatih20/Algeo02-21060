@@ -1,3 +1,7 @@
+WindowManager:
+    NormalWindow:
+    CameraWindow:
+
 <RoundedInputLabel1@Label>
     color: (1, 1, 1, 1)
     outline_color: (0, 1, 0, 1)
@@ -35,9 +39,11 @@
             size: self.size
             pos: self.pos
             radius: [58, 58, 0, 0]
-            
-<mainLayout>
-    id: widget
+
+<NormalWindow>
+    name: "first"
+    id: first
+    
     canvas.before:
         Rectangle:
             pos: self.pos
@@ -50,10 +56,32 @@
         width: 0
         height: 0
         text: ''
-
+        
     GridLayout:
         cols: 1
         size: root.width, root.height
+
+        BoxLayout:
+            size_hint: (1, 0.03)
+
+            Button:
+                text:'Go to Camera'
+                bold: True
+                color: (1, 1, 1, 1)
+
+                background_color: (80/255.0, 212/255.0, 106/255.0, 0.8)
+                background_normal: ""
+                on_release: 
+                    # root.manager.get_screen('second').cameraMatrixEigen = root.manager.get_screen('first').normalMatrixEigen
+                    # root.manager.get_screen('second').ids.camera.play = True
+                    # root.manager.get_screen('second').startCapturing()
+                    app.root.current = 'second'
+                    root.manager.transition.direction = "left"
+
+                canvas.before:
+                    Rectangle: 
+                        pos: self.pos
+                        size: self.size
 
         # Title
         Label:
@@ -103,7 +131,7 @@
                     dirselect: True
                     # Untuk tes biar cepat:
                     #rootpath: "..\pepsiman"
-                    on_selection: widget.saveFolder(filechoosen1.selection)
+                    on_selection: first.saveFolder(filechoosen1.selection)
 
                     color: (0, 0, 0, 1)
 
@@ -112,7 +140,7 @@
                             rgba: (0, 0, 0, 1)
                         RoundedRectangle:
                             pos: (15, 0)
-                            size: (475, 239)
+                            size: (475, 251)
                             radius: [10]
 
                 RoundedInputLabel1:
@@ -124,7 +152,7 @@
                     id: filechoosen2
                     # Untuk tes biar cepat:
                     # rootpath: "test_image"
-                    on_selection: widget.showTestImage(filechoosen2.selection)
+                    on_selection: first.showTestImage(filechoosen2.selection)
 
                     color: (0, 0, 0, 1)
 
@@ -133,27 +161,52 @@
                             rgba: (0, 0, 0, 1)
                         RoundedRectangle:
                             pos: (15, 0)
-                            size: (475, 239)
+                            size: (475, 251)
                             radius: [10]
                 
-                Button:
-                    text: "Process"
-                    font_size: 20
-                    bold: True
-
+                GridLayout:
+                    cols: 2
+                    height: 15
                     size_hint: (None, None)
-                    height: 30
-                    width: 100
-                    pos_hint: {"x": 0.35, "top": 1}
+                    pos_hint: {"x": 0.082}
 
-                    background_color: (104/255.0, 183/255.0, 35/255.0, 1)
-                    background_normal: ""
-                    canvas.before:
-                        Rectangle:
-                            size: self.size
-                            pos: self.pos
+                    Button:
+                        text: "Train Image"
+                        font_size: 20
+                        bold: True
 
-                    on_release: root.startProcessing()
+                        size_hint: (None, None)
+                        height: 30
+                        width: 200
+                        pos: (0, 0)
+
+                        background_color: (104/255.0, 183/255.0, 35/255.0, 1)
+                        background_normal: ""
+                        canvas.before:
+                            Rectangle:
+                                size: self.size
+                                pos: self.pos
+
+                        on_release: first.processTrainingSet()
+
+                    Button:
+                        text: "Process Image"
+                        font_size: 20
+                        bold: True
+
+                        size_hint: (None, None)
+                        height: 30
+                        width: 200
+                        pos: (200, 100)
+
+                        background_color: (104/255.0, 183/255.0, 35/255.0, 1)
+                        background_normal: ""
+                        canvas.before:
+                            Rectangle:
+                                size: self.size
+                                pos: self.pos
+
+                        on_release: first.searchBestImage()
 
                 Label:
                     text: ''
@@ -177,6 +230,18 @@
                     source: "Images/LoadingIcon.png"
                     allow_scretch: True
                     keep_ratio: True
+
+                Label:
+                    text: "Please wait some time after you press the processing button..."
+                    color: (0, 0, 0, 1)
+                    bold: True
+
+                    cols: 2
+                    size_hint: (1, 0.085)
+                    height: 20
+
+                    halign: "right"
+                    pos_hint: {"x": 2, "y": 0.2}
             
             GridLayout:
                 cols: 1
@@ -202,7 +267,7 @@
                     height: 20
 
                     Label:
-                        text: "Examination Time:"
+                        text: "                                                        Examination Time:"
                         color: (0, 0, 0, 1)
                         bold: True
                         size_hint: {0.8, 1}
@@ -212,8 +277,104 @@
 
                     Label: 
                         id: processingTime
-                        text: "0.0"
+                        text: "0 secs"
                         color: (0, 0, 0, 1)
 
                         halign: "left"
                         pos_hint: {"x": 4, "y": 0.5}
+
+<CameraWindow>:
+    name: 'second'
+    id: second
+    
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Images/bg.jfif'
+
+    GridLayout:
+        cols: 1
+        size: root.width, root.height
+
+        BoxLayout:
+            size_hint: (1, 0.03)
+
+            Button:
+                text:'Go to Manual'
+                bold: True
+                color: (1, 1, 1, 1)
+
+                background_color: (80/255.0, 212/255.0, 106/255.0, 0.8)
+                background_normal: ""
+                on_release: 
+                    # second.ids.camera.play = False
+                    # second.stopCapturing()
+                    app.root.current = 'first'
+                    root.manager.transition.direction = "right"
+
+                canvas.before:
+                    Rectangle: 
+                        pos: self.pos
+                        size: self.size
+
+        # Title
+        Label:
+            text: "PEPSIMAN FACE RECOGNITION APP"
+            font_size: 36
+            bold: True
+            italic: True
+
+            color: (209/255.0, 1, 130/255.0, 1)
+            outline_color: (0,1,0,1)
+            outline_width: 1
+
+            size_hint: (None, None)
+            height: 78
+            width: 1536
+
+            background_color: (104/255.0, 183/255.0, 35/255.0, 1)
+            canvas.before:
+                Color:
+                    rgba: self.background_color
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [0, 0, 58, 58]
+
+        GridLayout: 
+            cols: 2
+
+            GridLayout:
+                cols: 1
+
+                Label:
+                    text: ''
+                    size_hint: (0.05, 0.0075)
+
+                RoundedInputLabel2:
+                    text: "Camera"
+                    font_size: 24
+                    bold: True
+
+                # Camera:
+                #     id: camera 
+                #     resolution: (256, 256)
+                #     play: True
+
+        #     GridLayout:
+        #         cols: 1
+
+        #         Label:
+        #             text: ''
+        #             size_hint: (0.05, 0.0075)
+
+        #         RoundedInputLabel2:
+        #             text: "Camera"
+        #             font_size: 24
+        #             bold: True
+
+        #         Camera:
+        #             id: camera2 
+        #             resolution: (256, 256)
+        #             play: False

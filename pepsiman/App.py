@@ -118,17 +118,23 @@ class NormalWindow(Screen):
 
 
 class CameraWindow(Screen):
-    cameraMatrixEigen = None
+    # testMatrixEigen = None
+    # testMatrixY = None
+    # testPathList = []
+    # testMatrixAverage = None
+    # testInserted = False
 
-    def startCapturing(self):
-        if (self.cameraMatrixEigen != None and self.ids.camera.play == True):
-            Clock.schedule_interval(self.processCaptureImage, 10)
+    # def startCapturing(self):
+    #     if (self.cameraMatrixEigen != None and self.ids.camera.play == True):
+    #         Clock.schedule_interval(self.processCaptureImage, 10)
 
-    def processCaptureImage(self, interval):
-        print('a')
+    # def processCaptureImage(self, interval):
+    #     print('a')
 
-    def stopCapturing(self):
-        Clock.unschedule(self.processCaptureImage)
+    # def stopCapturing(self):
+    #     Clock.unschedule(self.processCaptureImage)
+    
+    pass
 
 
 class WindowManager(ScreenManager):

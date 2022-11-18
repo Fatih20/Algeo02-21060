@@ -72,9 +72,9 @@ WindowManager:
                 background_color: (80/255.0, 212/255.0, 106/255.0, 0.8)
                 background_normal: ""
                 on_release: 
-                    root.manager.get_screen('second').cameraMatrixEigen = root.manager.get_screen('first').normalMatrixEigen
-                    root.manager.get_screen('second').ids.camera.play = True
-                    root.manager.get_screen('second').startCapturing()
+                    # root.manager.get_screen('second').cameraMatrixEigen = root.manager.get_screen('first').normalMatrixEigen
+                    # root.manager.get_screen('second').ids.camera.play = True
+                    # root.manager.get_screen('second').startCapturing()
                     app.root.current = 'second'
                     root.manager.transition.direction = "left"
 
@@ -308,8 +308,8 @@ WindowManager:
                 background_color: (80/255.0, 212/255.0, 106/255.0, 0.8)
                 background_normal: ""
                 on_release: 
-                    second.ids.camera.play = False
-                    second.stopCapturing()
+                    # second.ids.camera.play = False
+                    # second.stopCapturing()
                     app.root.current = 'first'
                     root.manager.transition.direction = "right"
 
@@ -357,24 +357,24 @@ WindowManager:
                     font_size: 24
                     bold: True
 
-                Camera:
-                    id: camera 
-                    resolution: (256, 256)
-                    play: False
+                # Camera:
+                #     id: camera 
+                #     resolution: (256, 256)
+                #     play: True
 
-            GridLayout:
-                cols: 1
+        #     GridLayout:
+        #         cols: 1
 
-                Label:
-                    text: ''
-                    size_hint: (0.05, 0.0075)
+        #         Label:
+        #             text: ''
+        #             size_hint: (0.05, 0.0075)
 
-                RoundedInputLabel2:
-                    text: "Camera"
-                    font_size: 24
-                    bold: True
+        #         RoundedInputLabel2:
+        #             text: "Camera"
+        #             font_size: 24
+        #             bold: True
 
-                Camera:
-                    id: camera2 
-                    resolution: (256, 256)
-                    play: False
+        #         Camera:
+        #             id: camera2 
+        #             resolution: (256, 256)
+        #             play: False

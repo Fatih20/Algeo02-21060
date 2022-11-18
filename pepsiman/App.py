@@ -4,15 +4,14 @@ from kivy.properties import ObjectProperty
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.clock import Clock
+from kivy.uix.screenmanager import ScreenManager
+from kivy.uix.screenmanager import Screen
 
 from processing import *
 import time
 
-Builder.load_file("GUI.kv")
-
-
-class mainLayout(Widget):
-    matrixEigen = [[]]
+class NormalWindow(Screen):
+    normalMatrixEigen = None
 
     # Show test image
     def showTestImage(self, pathname):
@@ -47,7 +46,6 @@ class mainLayout(Widget):
     def subtractAndShowTime(self, jam2, jam1, menit2, menit1, detik2, detik1):
         to_show = (jam2 - jam1)*3600 + (menit2-menit1)*60 + (detik2-detik1)
         self.ids.processingTime.text = f"{to_show} secs"
-
 
     # Process Folder
     def processTrainingSet(self):
@@ -86,6 +84,7 @@ class mainLayout(Widget):
             #time.sleep(3)
             #--------
             # Algoritma buat cari best_face disini
+            
             #--------
 
             # Raw code untuk processing
@@ -111,11 +110,28 @@ class mainLayout(Widget):
 
             self.subtractAndShowTime(jam2, jam1, menit2, menit1, detik2, detik1)
 
+class CameraWindow(Screen):
+    cameraMatrixEigen = None
+
+    def startCapturing(self):
+        if (self.cameraMatrixEigen != None and self.ids.camera.play == True):
+            Clock.schedule_interval(self.processCaptureImage, 10)
+
+    def processCaptureImage(self, interval):
+        print('a')
+
+    def stopCapturing(self):
+        Clock.unschedule(self.processCaptureImage)
+
+class WindowManager(ScreenManager):
+    pass
+
+kivy = Builder.load_file("GUI.kv")
+
 class mainApp(App):
     def build(self):
         #Window.clearcolor = (209/255.0, 1, 130/255.0, 1)
-        return mainLayout()
-
+        return kivy
 
 if __name__ == '__main__':
     mainApp().run()

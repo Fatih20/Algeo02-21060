@@ -10,10 +10,16 @@ from kivy.uix.screenmanager import Screen
 from processing import *
 import time
 
+
 class NormalWindow(Screen):
-    normalMatrixEigen = None
+    testMatrixEigen = None
+    testMatrixY = None
+    testPathList = []
+    testMatrixAverage = None
+    testInserted = False
 
     # Show test image
+
     def showTestImage(self, pathname):
         try:
             self.ids.testImage.source = pathname[0]
@@ -42,7 +48,7 @@ class NormalWindow(Screen):
         menit = int(time_string[13:15])
         detik = int(time_string[15:17])
         return [jam, menit, detik]
-    
+
     def subtractAndShowTime(self, jam2, jam1, menit2, menit1, detik2, detik1):
         to_show = (jam2 - jam1)*3600 + (menit2-menit1)*60 + (detik2-detik1)
         self.ids.processingTime.text = f"{to_show} secs"
@@ -57,38 +63,7 @@ class NormalWindow(Screen):
             menit1 = timeArr[1]
             detik1 = timeArr[2]
 
-            #--------
-            # Algoritma buat proses traing set disini
-            # cara simpen ke matrix:
-            # self.matrixEigen = blabla
-            #--------
-
-            timeArr = self.getCurrentTime()
-            jam2 = timeArr[0]
-            menit2 = timeArr[1]
-            detik2 = timeArr[2]
-
-            self.subtractAndShowTime(jam2, jam1, menit2, menit1, detik2, detik1)
-
-    # Search for best image
-    def searchBestImage(self):
-        if (self.ids.testImage.source != "Images/LoadingIcon.png"):
-            # Clock.schedule_interval(self.showLoading(), 0)
-            jam1 = jam2 = menit1 = menit2 = detik1 = detik2 = 0
-
-            timeArr = self.getCurrentTime()
-            jam1 = timeArr[0]
-            menit1 = timeArr[1]
-            detik1 = timeArr[2]
-
-            #time.sleep(3)
-            #--------
-            # Algoritma buat cari best_face disini
-            
-            #--------
-
-            # Raw code untuk processing
-            testedImage = self.ids.testImage.source
+            # Proses training set
             sampleFolder = self.ids.folderName.text
             path_list = path_generator(sampleFolder)
             flat_matrix_list = image_f_matrix_generator(sampleFolder)
@@ -99,8 +74,38 @@ class NormalWindow(Screen):
             covariant_acc = np.matmul(training_matrix_t, training_matrix)
             ev, e = eigen_generator(covariant_acc, training_matrix)
             y = y_generator(covariant_acc, training_matrix)
+
+            self.testMatrixEigen = e
+            self.testMatrixY = y
+            self.testPathList = path_list
+            self.testMatrixAverage = average_matrix
+            self.testInserted = True
+
+            timeArr = self.getCurrentTime()
+            jam2 = timeArr[0]
+            menit2 = timeArr[1]
+            detik2 = timeArr[2]
+
+            self.subtractAndShowTime(
+                jam2, jam1, menit2, menit1, detik2, detik1)
+
+    # Search for best image
+    def searchBestImage(self):
+        if (self.ids.testImage.source != "Images/LoadingIcon.png" and self.testInserted == True):
+            # Clock.schedule_interval(self.showLoading(), 0)
+            jam1 = jam2 = menit1 = menit2 = detik1 = detik2 = 0
+
+            timeArr = self.getCurrentTime()
+            jam1 = timeArr[0]
+            menit1 = timeArr[1]
+            detik1 = timeArr[2]
+
+            # time.sleep(3)
+
+            # Cari bestface ada di sini
+            testedImage = self.ids.testImage.source
             file_of_bestface = bestface(
-                average_matrix, e, y, path_list, testedImage)
+                self.testMatrixAverage, self.testMatrixEigen, self.testMatrixY, self.testPathList, testedImage)
             self.ids.resultImage.source = file_of_bestface
 
             timeArr = self.getCurrentTime()
@@ -108,7 +113,9 @@ class NormalWindow(Screen):
             menit2 = timeArr[1]
             detik2 = timeArr[2]
 
-            self.subtractAndShowTime(jam2, jam1, menit2, menit1, detik2, detik1)
+            self.subtractAndShowTime(
+                jam2, jam1, menit2, menit1, detik2, detik1)
+
 
 class CameraWindow(Screen):
     cameraMatrixEigen = None
@@ -123,15 +130,19 @@ class CameraWindow(Screen):
     def stopCapturing(self):
         Clock.unschedule(self.processCaptureImage)
 
+
 class WindowManager(ScreenManager):
     pass
 
+
 kivy = Builder.load_file("GUI.kv")
+
 
 class mainApp(App):
     def build(self):
         #Window.clearcolor = (209/255.0, 1, 130/255.0, 1)
         return kivy
+
 
 if __name__ == '__main__':
     mainApp().run()

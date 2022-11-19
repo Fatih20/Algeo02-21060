@@ -22,8 +22,9 @@ def path_generator(folder_name):
 
 
 def image_f_matrix_generator(folder_name):
-    flat_matrix_list = np.array([]).reshape(65536, 0)
     path_list = path_generator(folder_name)
+    sizeOfFlatMatrix = np.prod((cv2.imread(path_list[0], 0)).shape)
+    flat_matrix_list = np.array([]).reshape(sizeOfFlatMatrix, 0)
     for path in path_list:
         original_matrix = (cv2.imread(path, 0))
         flatten_matrix = np.array(original_matrix.flatten())[np.newaxis].T

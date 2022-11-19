@@ -16,12 +16,13 @@ class NormalWindow(Screen):
     testPathList = []
     testMatrixAverage = None
     testInserted = False
+    trainingSetSize = 256
 
     # Show test image
 
     def getTestImage(self):
         try:
-            path = filechooser.open_file(title="Pick a test image", filters=["*.jpg", "*.png"])
+            path = filechooser.open_file(title="Pick a test image", filters=["*.jpg"])
             self.ids.testImage.source = path[0]
             temp = self.ids.testImage.source.split('\\')
             self.ids.fileLabel.text = temp[len(temp)-1]
@@ -135,6 +136,7 @@ class CameraWindow(Screen):
     testPathList = []
     testMatrixAverage = None
     testInserted = False
+    trainingSetSize = 256
 
     def startCapturing(self):
         if (self.testInserted == True): #and self.ids.camera.play == True):
@@ -145,7 +147,9 @@ class CameraWindow(Screen):
         png = Image.open("Images/cameraImage.png").crop((256, 176, 512, 432)).convert("RGBA")
         bg = Image.new('RGBA', png.size, (255, 255, 255))
         alpha = Image.alpha_composite(bg, png).convert("RGB")
-        alpha.resize((256, 256)).save("Images/cameraImage.jpg", "JPEG", quality = 100)
+        
+        # still in progress
+        alpha.resize((self.trainingSetSize, self.trainingSetSize)).save("Images/cameraImage.jpg", "JPEG", quality = 100)
 
         testedImage = "Images/cameraImage.jpg"
 
@@ -153,12 +157,8 @@ class CameraWindow(Screen):
             self.testMatrixAverage, self.testMatrixEigen, self.testMatrixY, self.testPathList, testedImage)
         self.ids.cameraResultImage.source = file_of_bestface
 
-        pass
-
     def stopCapturing(self):
         Clock.unschedule(self.processCaptureImage)
-    
-    pass
 
 
 class WindowManager(ScreenManager):

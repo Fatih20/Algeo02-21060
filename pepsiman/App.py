@@ -10,6 +10,7 @@ import time
 
 from processing import *
 
+
 class NormalWindow(Screen):
     testMatrixEigen = None
     testMatrixY = None
@@ -22,7 +23,8 @@ class NormalWindow(Screen):
 
     def getTestImage(self):
         try:
-            path = filechooser.open_file(title="Pick a test image", filters=["*.jpg"])
+            path = filechooser.open_file(
+                title="Pick a test image", filters=["*.jpg"])
             self.ids.testImage.source = path[0]
             temp = self.ids.testImage.source.split('\\')
             self.ids.fileLabel.text = temp[len(temp)-1]
@@ -32,7 +34,8 @@ class NormalWindow(Screen):
     # Save training set folder name
     def getFolderName(self):
         try:
-            path = filechooser.choose_dir(title="Choose the folder containing your training set")
+            path = filechooser.choose_dir(
+                title="Choose the folder containing your training set")
             self.ids.folderName.text = path[0]
             temp = self.ids.folderName.text.split('\\')
             self.ids.folderLabel.text = temp[len(temp)-1]
@@ -64,7 +67,7 @@ class NormalWindow(Screen):
         if (self.ids.folderName.text != ""):
             self.ids.processingTime.text = "Loading..."
             Clock.schedule_once(self.processTrainingSet, 0)
-    
+
     def processTrainingSet(self, interval):
         jam1 = jam2 = menit1 = menit2 = detik1 = detik2 = 0
 
@@ -84,6 +87,7 @@ class NormalWindow(Screen):
         covariant_acc = np.matmul(training_matrix_t, training_matrix)
         ev, e = eigen_generator(covariant_acc, training_matrix)
         y = y_generator(covariant_acc, training_matrix)
+        self.trainingSetSize = len(flat_matrix_list)
 
         self.testMatrixEigen = e
         self.testMatrixY = y
@@ -98,8 +102,8 @@ class NormalWindow(Screen):
 
         self.subtractAndShowTime(
             jam2, jam1, menit2, menit1, detik2, detik1)
-        
-    # Search for best 
+
+    # Search for best
     def startBestImage(self):
         if (self.ids.testImage.source != "Images/placeHolderImage.png" and self.testInserted == True):
             self.ids.processingTime.text = "Loading..."
@@ -139,17 +143,19 @@ class CameraWindow(Screen):
     trainingSetSize = 256
 
     def startCapturing(self):
-        if (self.testInserted == True): #and self.ids.camera.play == True):
+        if (self.testInserted == True):  # and self.ids.camera.play == True):
             Clock.schedule_interval(self.processCaptureImage, 2)
 
     def processCaptureImage(self, interval):
         self.ids.camera.export_to_png("Images/cameraImage.png")
-        png = Image.open("Images/cameraImage.png").crop((256, 176, 512, 432)).convert("RGBA")
+        png = Image.open("Images/cameraImage.png").crop((256,
+                                                         176, 512, 432)).convert("RGBA")
         bg = Image.new('RGBA', png.size, (255, 255, 255))
         alpha = Image.alpha_composite(bg, png).convert("RGB")
-        
+
         # still in progress
-        alpha.resize((self.trainingSetSize, self.trainingSetSize)).save("Images/cameraImage.jpg", "JPEG", quality = 100)
+        alpha.resize((self.trainingSetSize, self.trainingSetSize)).save(
+            "Images/cameraImage.jpg", "JPEG", quality=100)
 
         testedImage = "Images/cameraImage.jpg"
 

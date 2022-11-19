@@ -46,7 +46,7 @@ def average_flatten_generator(matrix_list):
 
 def training_matrix_generator(flat_matrix_list, average_matrix):
     n = len(flat_matrix_list[0])
-    flat_difference_list = np.array([]).reshape(65536, 0)
+    flat_difference_list = np.array([]).reshape(len(flat_matrix_list), 0)
     for i in range(0, n):
         added_matrix = np.subtract(np.array(flat_matrix_list[:, i])[
                                    np.newaxis].T, average_matrix)
@@ -63,7 +63,8 @@ def eigen_generator(covariant_acc, training_matrix):
     else:
         eigenval_list, eigenvec_acc_list = eigfunc.QR_eig(covariant_acc)
 
-    eigenvec_list = np.array([]).reshape(65536, 0)
+    row, column = training_matrix.shape
+    eigenvec_list = np.array([]).reshape(row, 0)
     for eigenvec_acc in eigenvec_acc_list:
         new_eigenvec = (np.matmul(
             training_matrix, (np.array(eigenvec_acc)[np.newaxis].T)))
@@ -89,17 +90,21 @@ def omega_of_target(filename, average_matrix, eigenvec_matrix):
     return omega
 
 
+def euclidean_distance(matrix_a, matrix_b):
+    subtract = matrix_a - matrix_b
+    return np.sqrt(np.dot(subtract.T, subtract))
+
+
 def bestface(average_matrix, eigenvec_matrix, y, path_list, testedImage):
     omega_in_array = omega_of_target(testedImage,
                                      average_matrix, eigenvec_matrix).flatten()
     min_column_r = y[:, 0]
-    tempSubtraction = omega_in_array - min_column_r
-    min_dist = np.sqrt(np.dot(tempSubtraction.T, tempSubtraction))
+    min_dist = euclidean_distance(omega_in_array, min_column_r)
     min_column = 0
     n = len(y[0])
     for i in range(1, n):
         observed_column = y[:, i]
-        dist = np.linalg.norm(omega_in_array - observed_column)
+        dist = euclidean_distance(omega_in_array, observed_column)
         if dist < min_dist:
             min_dist = dist
             min_column = i

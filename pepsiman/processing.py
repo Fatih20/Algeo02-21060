@@ -92,7 +92,8 @@ def bestface(average_matrix, eigenvec_matrix, y, path_list, testedImage):
     omega_in_array = omega_of_target(testedImage,
                                      average_matrix, eigenvec_matrix).flatten()
     min_column_r = y[:, 0]
-    min_dist = np.linalg.norm(omega_in_array - min_column_r)
+    tempSubtraction = omega_in_array - min_column_r
+    min_dist = np.sqrt(np.dot(tempSubtraction.T, tempSubtraction))
     min_column = 0
     n = len(y[0])
     for i in range(1, n):

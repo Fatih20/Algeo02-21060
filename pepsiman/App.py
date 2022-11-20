@@ -87,7 +87,7 @@ class NormalWindow(Screen):
         covariant_acc = np.matmul(training_matrix_t, training_matrix)
         ev, e = eigen_generator(covariant_acc, training_matrix)
         y = y_generator(covariant_acc, training_matrix)
-        self.trainingSetSize = len(flat_matrix_list)
+        self.trainingSetSize =  int ((len(flat_matrix_list))**(1/2))
 
         self.testMatrixEigen = e
         self.testMatrixY = y
@@ -120,6 +120,7 @@ class NormalWindow(Screen):
         # time.sleep(3)
 
         # Cari bestface ada di sini
+        im = Image.open(self.ids.testImage.source).resize((self.trainingSetSize, self.trainingSetSize)).save(self.ids.testImage.source, quality=100)
         testedImage = self.ids.testImage.source
         file_of_bestface = bestface(
             self.testMatrixAverage, self.testMatrixEigen, self.testMatrixY, self.testPathList, testedImage)

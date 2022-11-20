@@ -77,18 +77,10 @@ class NormalWindow(Screen):
         detik1 = timeArr[2]
 
         # Proses training set
-        sampleFolder = self.ids.folderName.text
-        path_list = path_generator(sampleFolder)
-        flat_matrix_list = image_f_matrix_generator(sampleFolder)
-        average_matrix = average_flatten_generator(flat_matrix_list)
-        training_matrix = training_matrix_generator(
-            flat_matrix_list, average_matrix)
-        training_matrix_t = np.transpose(training_matrix)
-        covariant_acc = np.matmul(training_matrix_t, training_matrix)
-        ev, e = eigen_generator(covariant_acc, training_matrix)
-        y = y_generator(covariant_acc, training_matrix)
-        self.trainingSetSize =  int ((len(flat_matrix_list))**(1/2))
-
+        sample_folder = self.ids.folderName.text
+        path_list, e, y, average_matrix, image_size = process_images(
+            sample_folder)
+        self.trainingSetSize = image_size
         self.testMatrixEigen = e
         self.testMatrixY = y
         self.testPathList = path_list
@@ -120,11 +112,11 @@ class NormalWindow(Screen):
         # time.sleep(3)
 
         # Cari bestface ada di sini
-        im = Image.open(self.ids.testImage.source).resize((self.trainingSetSize, self.trainingSetSize)).save(self.ids.testImage.source, quality=100)
+        im = Image.open(self.ids.testImage.source).resize(
+            (self.trainingSetSize, self.trainingSetSize)).save(self.ids.testImage.source, quality=100)
         testedImage = self.ids.testImage.source
-        file_of_bestface = bestface(
+        self.ids.resultImage.source = bestface(
             self.testMatrixAverage, self.testMatrixEigen, self.testMatrixY, self.testPathList, testedImage)
-        self.ids.resultImage.source = file_of_bestface
 
         timeArr = self.getCurrentTime()
         jam2 = timeArr[0]

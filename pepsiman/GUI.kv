@@ -7,9 +7,7 @@ WindowManager:
     outline_color: (0, 1, 0, 1)
     outline_width: 1
 
-    size_hint: (None, None)
-    height: 80
-    width: 500
+    size_hint: (1, 0.1)
     pos_hint: {"x": 0}
 
     background_color: (0, 0, 0, 0)
@@ -72,9 +70,14 @@ WindowManager:
                 background_color: (80/255.0, 212/255.0, 106/255.0, 0.8)
                 background_normal: ""
                 on_release: 
-                    # root.manager.get_screen('second').cameraMatrixEigen = root.manager.get_screen('first').normalMatrixEigen
-                    # root.manager.get_screen('second').ids.camera.play = True
-                    # root.manager.get_screen('second').startCapturing()
+                    root.manager.get_screen('second').testMatrixEigen = root.manager.get_screen('first').testMatrixEigen
+                    root.manager.get_screen('second').testMatrixY = root.manager.get_screen('first').testMatrixY
+                    root.manager.get_screen('second').testPathList = root.manager.get_screen('first').testPathList
+                    root.manager.get_screen('second').testMatrixAverage = root.manager.get_screen('first').testMatrixAverage
+                    root.manager.get_screen('second').testInserted = root.manager.get_screen('first').testInserted
+                    root.manager.get_screen('second').trainingSetSize = root.manager.get_screen('first').trainingSetSize
+                    root.manager.get_screen('second').ids.camera.play = True
+                    root.manager.get_screen('second').startCapturing()
                     app.root.current = 'second'
                     root.manager.transition.direction = "left"
 
@@ -121,97 +124,135 @@ WindowManager:
                 spacing: 10
                 background_color: (1, 1, 1, 1)
 
-                RoundedInputLabel1:
-                    text: "Input your training image folder: "
-                    font_size: 24
-                    bold: True
+                Label:
+                    text:''
+                    size_hint: (1, 0.34)
                 
-                FileChooserIconView:
+                Button:
                     id: filechoosen1
-                    dirselect: True
-                    # Untuk tes biar cepat:
-                    #rootpath: "..\pepsiman"
-                    on_selection: first.saveFolder(filechoosen1.selection)
-
-                    color: (0, 0, 0, 1)
-
-                    canvas.before:
-                        Color:
-                            rgba: (0, 0, 0, 1)
-                        RoundedRectangle:
-                            pos: (15, 0)
-                            size: (475, 251)
-                            radius: [10]
-
-                RoundedInputLabel1:
-                    text: "Input your test image: "
+                    text: "Choose training set"
                     font_size: 24
                     bold: True
+                    color: (1, 1, 1, 1)
 
-                FileChooserIconView:
-                    id: filechoosen2
-                    # Untuk tes biar cepat:
-                    # rootpath: "test_image"
-                    on_selection: first.showTestImage(filechoosen2.selection)
+                    size_hint: (1, 0.07)
+                    background_normal: ""
+                    background_color: (80/255.0, 212/255.0, 106/255.0, 0.9)
 
-                    color: (0, 0, 0, 1)
-
+                    on_release: first.getFolderName()
+                    
                     canvas.before:
-                        Color:
-                            rgba: (0, 0, 0, 1)
                         RoundedRectangle:
-                            pos: (15, 0)
-                            size: (475, 251)
-                            radius: [10]
-                
+                            size: self.size
+                            pos: self.pos
+                            radius: [20]
+
                 GridLayout:
-                    cols: 2
-                    height: 15
-                    size_hint: (None, None)
-                    pos_hint: {"x": 0.082}
+                    cols: 3
+                    size_hint: (1, 0.03)
 
-                    Button:
-                        text: "Train Image"
+                    Label:
+                        text: "File name: "
                         font_size: 20
                         bold: True
+                        color: (104/255.0, 183/255.0, 35/255.0, 1)
+                        pos_hint: {"x": 0.5}
 
-                        size_hint: (None, None)
-                        height: 30
-                        width: 200
-                        pos: (0, 0)
-
-                        background_color: (104/255.0, 183/255.0, 35/255.0, 1)
-                        background_normal: ""
-                        canvas.before:
-                            Rectangle:
-                                size: self.size
-                                pos: self.pos
-
-                        on_release: first.processTrainingSet()
-
-                    Button:
-                        text: "Process Image"
+                    Label:
+                        id: folderLabel
+                        text: "No folder selected"
                         font_size: 20
                         bold: True
+                        color: (104/255.0, 183/255.0, 35/255.0, 1)
+                        size_hint: (0.8, 1)
 
-                        size_hint: (None, None)
-                        height: 30
-                        width: 200
-                        pos: (200, 100)
-
-                        background_color: (104/255.0, 183/255.0, 35/255.0, 1)
-                        background_normal: ""
-                        canvas.before:
-                            Rectangle:
-                                size: self.size
-                                pos: self.pos
-
-                        on_release: first.searchBestImage()
+                    Label:
+                        text:''
 
                 Label:
-                    text: ''
-                    size_hint: (None, None)
-                    height: 5
+                    text:''
+                    size_hint: (1, 0.07)
+
+                Button:
+                    id: filechoosen2
+                    text: "Choose test image"
+                    font_size: 24
+                    bold: True
+                    color: (1, 1, 1, 1)
+
+                    size_hint: (1, 0.07)
+                    background_normal: ""
+                    background_color: (80/255.0, 212/255.0, 106/255.0, 0.9)
+
+                    on_release: first.getTestImage()
+
+                GridLayout:
+                    cols: 3
+                    size_hint: (1, 0.03)
+
+                    Label:
+                        text: "File name: "
+                        font_size: 20
+                        bold: True
+                        color: (104/255.0, 183/255.0, 35/255.0, 1)
+                        pos_hint: {"x": 0.5}
+
+                    Label:
+                        id: fileLabel
+                        text: "No file selected"
+                        font_size: 20
+                        bold: True
+                        color: (104/255.0, 183/255.0, 35/255.0, 1)
+                        size_hint: (0.8, 1)
+
+                    Label:
+                        text:''
+
+                Label:
+                    text:''
+                    size_hint: (1, 0.11)
+
+                Button:
+                    text: "Train Image"
+                    outline_color: (0, 1, 0, 1)
+                    outline_width: 1
+                    font_size: 20
+                    bold: True
+
+                    size_hint: (0.8, 0.07)
+                    pos_hint: {"x": 0.1}
+
+                    background_color: (104/255.0, 183/255.0, 35/255.0, 1)
+                    background_normal: ""
+                    canvas.before:
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
+                    on_release: first.startTrainingSet()
+
+                Button:
+                    text: "Process Image"
+                    outline_color: (0, 1, 0, 1)
+                    outline_width: 1
+                    font_size: 20
+                    bold: True
+
+                    size_hint: (0.8, 0.07)
+                    pos_hint: {"x": 0.1}
+
+                    background_color: (104/255.0, 183/255.0, 35/255.0, 1)
+                    background_normal: ""
+                    canvas.before:
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
+                    on_release: first.startBestImage()
+
+                Label:
+                    text:''
+                    size_hint: (1, 0.08)
 
             GridLayout:
                 cols: 1
@@ -227,7 +268,7 @@ WindowManager:
                 
                 Image:
                     id: testImage
-                    source: "Images/LoadingIcon.png"
+                    source: "Images/placeHolderImage.png"
                     allow_scretch: True
                     keep_ratio: True
 
@@ -257,7 +298,7 @@ WindowManager:
 
                 Image:
                     id: resultImage
-                    source: "Images/LoadingIcon.png"
+                    source: "Images/placeHolderImage.png"
                     allow_scretch: True
                     keep_ratio: True
                 
@@ -308,8 +349,8 @@ WindowManager:
                 background_color: (80/255.0, 212/255.0, 106/255.0, 0.8)
                 background_normal: ""
                 on_release: 
-                    # second.ids.camera.play = False
-                    # second.stopCapturing()
+                    second.ids.camera.play = False
+                    second.stopCapturing()
                     app.root.current = 'first'
                     root.manager.transition.direction = "right"
 
@@ -342,39 +383,60 @@ WindowManager:
                     pos: self.pos
                     radius: [0, 0, 58, 58]
 
-        GridLayout: 
+        Label:
+            text:''
+            size_hint: (None, None)
+            height: 10
+
+        GridLayout:
             cols: 2
+            size_hint: (1, 0.17)
 
             GridLayout:
-                cols: 1
+                cols: 3
 
-                Label:
+                Label:  
                     text: ''
-                    size_hint: (0.05, 0.0075)
+                    size_hint: (None, None)
+                    width: 125
 
                 RoundedInputLabel2:
                     text: "Camera"
                     font_size: 24
                     bold: True
+                
+                Label:  
+                    text: ''
+                    size_hint: (None, None)
+                    width: 125
 
-                # Camera:
-                #     id: camera 
-                #     resolution: (256, 256)
-                #     play: True
+            GridLayout:
+                cols: 3
+                
+                Label:  
+                    text: ''
+                    size_hint: (None, None)
+                    width: 125
 
-        #     GridLayout:
-        #         cols: 1
+                RoundedInputLabel2:
+                    text: "Result Image"
+                    font_size: 24
+                    bold: True
+                
+                Label:  
+                    text: ''
+                    size_hint: (None, None)
+                    width: 125
 
-        #         Label:
-        #             text: ''
-        #             size_hint: (0.05, 0.0075)
+        GridLayout:
+            cols: 2
+            size_hint: (1, 0.8)
 
-        #         RoundedInputLabel2:
-        #             text: "Camera"
-        #             font_size: 24
-        #             bold: True
+            Camera:
+                id: camera 
+                resolution: (256, 256)
+                play: False
 
-        #         Camera:
-        #             id: camera2 
-        #             resolution: (256, 256)
-        #             play: False
+            Image:
+                id: cameraResultImage
+                source: "Images/placeHolderImage.png"

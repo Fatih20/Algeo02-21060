@@ -51,6 +51,7 @@ Contributors:
 │          bg.jfif
 │          cameraImage.jpg
 │          cameraImage.png
+│          testImage.jpg          
 │       
 │       processing.py
 │       eigen_function.py
@@ -71,12 +72,14 @@ Pastikan anda telah menginstall beberapa library python yang dibutuhkan yaitu:
 3. OpenCV   : python -m pip install opencv-python
 4. Plyer    : python -m pip install plyer
 
+Pastikan pula bahwa anda sudah memasukkan training set yang digunakan ke dalam folder test untuk menghindari error
+
 ## How to Compile and Run
 Setelah setup berhasil dilakukan, ikuti langkah dibawah untuk menjalankan program:
 1. Masuk ke dalam folder src
 2. Masukkan command 'python App.py' untuk menjalankan program
 
-Note: Jika program tiba-tiba berhenti berjalan dan memunculkan pesan error "No such file/directory found: Images/cameraImage.png", cukup reload terminal dan jalankan ulang program.
+Note: Jika program tiba-tiba berhenti berjalan dan memunculkan pesan error " No such file or directory", cukup reload terminal dan jalankan ulang program.
 
 ## Project Status
 Proyek ini telah selesai secara utuh (Completed)

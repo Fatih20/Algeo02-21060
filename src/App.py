@@ -104,8 +104,9 @@ class NormalWindow(Screen):
         mikro1 = timeArr[3]
 
         im = Image.open(self.ids.testImage.source).resize(
-            (self.trainingSetSize, self.trainingSetSize)).save(self.ids.testImage.source, quality=100)
-        testedImage = self.ids.testImage.source
+            (self.trainingSetSize, self.trainingSetSize))
+        im.save("../../src/Images/testImage.jpg", quality=100)
+        testedImage = "../../src/Images/testImage.jpg"
         self.ids.resultImage.source = bestface(
             self.testMatrixAverage, self.testMatrixEigen, self.testMatrixY, self.testPathList, testedImage)
         temp = self.ids.resultImage.source.split("\\")

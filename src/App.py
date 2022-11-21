@@ -7,7 +7,6 @@ from kivy.uix.screenmanager import Screen
 from plyer import filechooser
 from PIL import Image
 from datetime import datetime
-
 from processing import *
 
 
@@ -19,8 +18,6 @@ class NormalWindow(Screen):
     testInserted = False
     trainingSetSize = 256
 
-    # Show test image
-
     def getTestImage(self):
         try:
             path = filechooser.open_file(
@@ -31,7 +28,6 @@ class NormalWindow(Screen):
         except:
             pass
 
-    # Save training set folder name
     def getFolderName(self):
         try:
             path = filechooser.choose_dir(
@@ -42,7 +38,6 @@ class NormalWindow(Screen):
         except:
             pass
 
-    # Show result image
     def showResultImage(self, pathname):
         try:
             self.ids.resultImage.source = pathname[0]
@@ -61,7 +56,6 @@ class NormalWindow(Screen):
         to_show = ((jam2 - jam1)*3600*1000000 + (menit2-menit1)*60*1000000 + (detik2-detik1)*1000000 + (mikro2 - mikro1)) / 1000000
         self.ids.processingTime.text = f"{to_show:.2f} secs"
 
-    # Process Folder
     def startTrainingSet(self):
         if (self.ids.folderName.text != ""):
             self.ids.processingTime.text = "Loading..."
@@ -76,7 +70,6 @@ class NormalWindow(Screen):
         detik1 = timeArr[2]
         mikro1 = timeArr[3]
 
-        # Proses training set
         sample_folder = self.ids.folderName.text
         path_list, e, y, average_matrix, image_size = process_images(
             sample_folder)
@@ -96,7 +89,6 @@ class NormalWindow(Screen):
         self.subtractAndShowTime(
             jam2, jam1, menit2, menit1, detik2, detik1, mikro2, mikro1)
 
-    # Search for best
     def startBestImage(self):
         if (self.ids.testImage.source != "Images/placeHolderImage.png" and self.testInserted == True):
             self.ids.processingTime.text = "Loading..."
@@ -111,9 +103,6 @@ class NormalWindow(Screen):
         detik1 = timeArr[2]
         mikro1 = timeArr[3]
 
-        # time.sleep(3)
-
-        # Cari bestface ada di sini
         im = Image.open(self.ids.testImage.source).resize(
             (self.trainingSetSize, self.trainingSetSize)).save(self.ids.testImage.source, quality=100)
         testedImage = self.ids.testImage.source
@@ -132,7 +121,6 @@ class NormalWindow(Screen):
         self.subtractAndShowTime(
             jam2, jam1, menit2, menit1, detik2, detik1, mikro2, mikro1)
 
-
 class CameraWindow(Screen):
     testMatrixEigen = None
     testMatrixY = None
@@ -142,7 +130,7 @@ class CameraWindow(Screen):
     trainingSetSize = 256
 
     def startCapturing(self):
-        if (self.testInserted == True):  # and self.ids.camera.play == True):
+        if (self.testInserted == True):
             Clock.schedule_interval(self.processCaptureImage, 2)
 
     def processCaptureImage(self, interval):
@@ -151,8 +139,6 @@ class CameraWindow(Screen):
                                                          176, 512, 432)).convert("RGBA")
         bg = Image.new('RGBA', png.size, (255, 255, 255))
         alpha = Image.alpha_composite(bg, png).convert("RGB")
-
-        # still in progress
         alpha.resize((self.trainingSetSize, self.trainingSetSize)).save(
             "Images/cameraImage.jpg", "JPEG", quality=100)
 
@@ -164,7 +150,6 @@ class CameraWindow(Screen):
 
     def stopCapturing(self):
         Clock.unschedule(self.processCaptureImage)
-
 
 class WindowManager(ScreenManager):
     pass

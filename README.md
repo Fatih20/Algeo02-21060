@@ -47,24 +47,22 @@ Contributors:
 │   │      processing.cpython-310.pyc
 │   │
 │   └───Images
-│          testColor
-│          testFace
-│          testSize
 │          placeHolderImage.png
 │          bg.jfif
-│          cameraImage.jpg
-│          cameraImage.png          
 │       
-│       processing.py
-│       eigen_function.py
 │       App.py
+│       eigen_function.py
+│       processing.py
 │       GUI.kv
 │
 └───test
+       testColor
+       testFace
+       testLighting
+       testSize
        trainingSet1
        trainingSet2
        trainingSet3
-       trainingSet4
 ```
 
 ## Setup

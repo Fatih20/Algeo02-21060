@@ -100,7 +100,7 @@ def bestface(average_matrix, eigenvec_matrix, y, path_list, testedImage):
             min_dist = dist
             min_column = i
             min_column_r = observed_column    
-    if (min_dist < 30000):
+    if (min_dist < 10**6):
         return path_list[min_column]
     else:
         return ""

@@ -57,6 +57,7 @@ Contributors:
 │       GUI.kv
 │
 └───test
+       testCameraResults
        testColor
        testFace
        testLighting
@@ -83,8 +84,6 @@ Setelah program berhasil dijalankan, maka anda dapat memasukkan folder training 
 Lakukan train terhadap folder training set terlebih dahulu, kemudian proses gambar uji untuk mendapatkan gambar hasil.
 
 Pada fitur kamera, pastikan pula anda telah melakukan train training set terlebih dahulu pada screen input manual.
-
-Note: Jika program tiba-tiba berhenti berjalan dan memunculkan pesan error " No such file or directory", cukup reload terminal dan jalankan ulang program.
 
 ## Project Status
 Proyek ini telah selesai secara utuh (Completed)

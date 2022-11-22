@@ -48,6 +48,7 @@ Contributors:
 │   │
 │   └───Images
 │          placeHolderImage.png
+│          matchNotFound.png
 │          bg.jfif
 │       
 │       App.py
@@ -76,6 +77,12 @@ Pastikan anda telah menginstall beberapa library python yang dibutuhkan yaitu:
 Setelah setup berhasil dilakukan, ikuti langkah dibawah untuk menjalankan program:
 1. Masuk ke dalam folder src
 2. Masukkan command 'python App.py' untuk menjalankan program
+
+Setelah program berhasil dijalankan, maka anda dapat memasukkan folder training set dan file gambar uji.
+
+Lakukan train terhadap folder training set terlebih dahulu, kemudian proses gambar uji untuk mendapatkan gambar hasil.
+
+Pada fitur kamera, pastikan pula anda telah melakukan train training set terlebih dahulu pada screen input manual.
 
 Note: Jika program tiba-tiba berhenti berjalan dan memunculkan pesan error " No such file or directory", cukup reload terminal dan jalankan ulang program.
 

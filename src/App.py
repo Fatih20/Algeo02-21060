@@ -38,12 +38,6 @@ class NormalWindow(Screen):
         except:
             pass
 
-    def showResultImage(self, pathname):
-        try:
-            self.ids.resultImage.source = pathname[0]
-        except:
-            pass
-
     def getCurrentTime(self):
         time = datetime.now()
         jam = time.hour
@@ -106,11 +100,17 @@ class NormalWindow(Screen):
         im = Image.open(self.ids.testImage.source).resize(
             (self.trainingSetSize, self.trainingSetSize)).save("testImage.jpg", quality=100)
         testedImage = "testImage.jpg"
-        self.ids.resultImage.source = bestface(
+        file_of_bestface = bestface(
             self.testMatrixAverage, self.testMatrixEigen, self.testMatrixY, self.testPathList, testedImage)
-        temp = self.ids.resultImage.source.split("\\")
-        temp2 = temp[len(temp)-1].split('/')
-        self.ids.bestFace.text = temp2[1]
+        
+        if (file_of_bestface != ""):
+            self.ids.resultImage.source = file_of_bestface
+            temp = self.ids.resultImage.source.split("\\")
+            temp2 = temp[len(temp)-1].split('/')
+            self.ids.bestFace.text = temp2[1]
+        else:
+            self.ids.resultImage.source = "Images/matchNotFound.png"
+            self.ids.bestFace.text = "None"
 
         timeArr = self.getCurrentTime()
         jam2 = timeArr[0]
@@ -146,7 +146,11 @@ class CameraWindow(Screen):
 
         file_of_bestface = bestface(
             self.testMatrixAverage, self.testMatrixEigen, self.testMatrixY, self.testPathList, testedImage)
-        self.ids.cameraResultImage.source = file_of_bestface
+            
+        if (file_of_bestface != ""):
+            self.ids.cameraResultImage.source = file_of_bestface
+        else:
+            self.ids.cameraResultImage.source = "Images/matchNotFound.png"
 
     def stopCapturing(self):
         Clock.unschedule(self.processCaptureImage)

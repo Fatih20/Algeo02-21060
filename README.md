@@ -47,11 +47,13 @@ Contributors:
 │   │      processing.cpython-310.pyc
 │   │
 │   └───Images
+│          testColor
+│          testFace
+│          testSize
 │          placeHolderImage.png
 │          bg.jfif
 │          cameraImage.jpg
-│          cameraImage.png
-│          testImage.jpg          
+│          cameraImage.png          
 │       
 │       processing.py
 │       eigen_function.py
@@ -71,8 +73,6 @@ Pastikan anda telah menginstall beberapa library python yang dibutuhkan yaitu:
 2. Numpy    : python -m pip install numpy
 3. OpenCV   : python -m pip install opencv-python
 4. Plyer    : python -m pip install plyer
-
-Pastikan pula bahwa anda sudah memasukkan training set yang digunakan ke dalam folder test untuk menghindari error
 
 ## How to Compile and Run
 Setelah setup berhasil dilakukan, ikuti langkah dibawah untuk menjalankan program:
